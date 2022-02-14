@@ -10,7 +10,10 @@
         <a class="fa-solid fa-file-invoice-dollar"></a>
     </li>
     <li class="menu-item" title="Partners">
-        <a class="fa-solid fa-handshake"></a>
+        <a class="fa-solid fa-handshake"
+          data-bs-toggle="modal" 
+          data-bs-target="#listPartnerModal"
+        ></a>
     </li>
     <li class="menu-item" title="Clients">
         <a
@@ -19,18 +22,21 @@
           data-bs-target="#listClientModal"/>
     </li>
     <Clientes />
+    <Partners />
   </ul>
 </nav>
 </template>
 
 <script>
 import Clientes from '../views/Clientes.vue';
+import Partners from '../views/Partners.vue';
 import './styles.css';
 
 export default {
     name: 'Menu',
     components: {
-        Clientes
+        Clientes,
+        Partners
     }
 }
 

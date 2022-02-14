@@ -1,18 +1,18 @@
 <template>
 <div>
-    <div class="modal fade" id="listClientModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="listPartnerModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content" style="background-color: #151414; color: white;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Clients</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Partners</h5>
                     <button 
                         data-bs-dismiss="modal"
                         type="button" 
                         class="btn btn-secondary"
                         data-bs-toggle="modal"
-                        data-bs-target="#clienteModal"
-                        v-on:click="() => this.infoCliente = {}">
-                        + Client
+                        data-bs-target="#partnerModal"
+                        v-on:click="() => this.infoPartner = {}">
+                        + Partner
                     </button>
                     <button 
                         type="button" 
@@ -28,32 +28,30 @@
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Contact</th>
                                 <th scope="col" class="text-center">Situation</th>
                                 <th scope="col" class="text-center">Options</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="cliente in clientes" :key="cliente.id" :class="{ 'line-through' : cliente.situacao == 'DEACTIVADED'}">
-                                <th scope="row">{{cliente.id}}</th>
-                                <td>{{cliente.nome}}</td>
-                                <td>{{cliente.contato}}</td>
+                            <tr v-for="agencia in partners" :key="agencia.id" :class="{ 'line-through' : agencia.situacao == 'DEACTIVADED'}">
+                                <th scope="row">{{agencia.id}}</th>
+                                <td>{{agencia.nome}}</td>
                                 <td class="text-center">
-                                    <span v-if="cliente.situacao == 'DEACTIVADED'" class="badge badge-pill badge-danger">{{cliente.situacao}}</span>
-                                    <span v-if="cliente.hasReportsActives == true" class="badge badge-pill badge-warning" style="color: black">Have active reports</span>
+                                    <span v-if="agencia.situacao == 'DEACTIVADED'" class="badge badge-pill badge-secondary">{{agencia.situacao}}</span>
+                                    <span v-if="agencia.hasReportsActive == true" class="badge badge-pill badge-warning" style="color: black;">Have active reports</span>
                                 </td>
-                                <td class="options" v-show="cliente.situacao != 'DEACTIVADED'">
+                                <td class="options" v-show="agencia.situacao != 'DEACTIVADED'">
                                     <span
                                         data-bs-dismiss="modal"
                                         class="options-button"
                                         data-bs-toggle="modal" 
-                                        data-bs-target="#clienteModal"
-                                        v-on:click="enviaInfoCliente(cliente)">
+                                        data-bs-target="#partnerModal"
+                                        v-on:click="enviaInfoCliente(agencia)">
                                         <i class="fa-solid fa-pen"></i>
                                     </span>
                                     <span 
                                         class="options-button"
-                                        v-on:click="inactive(cliente.id)"
+                                        v-on:click="inactive(agencia.id)"
                                         title="Inactive client">
                                         <i class="fa-solid fa-ban" style="color: red;"></i>
                                     </span>
@@ -69,32 +67,31 @@
             </div>
         </div>
     </div>
-    <ModalClient :cliente="infoCliente"/>
+    <ModalPartner :agencia="infoPartner"/>
 </div>
     
 </template>
 
 <script>
-import ClienteService from '../services/ClienteService';
-import ModalClient from '../components/ModalClient.vue';
+import PartnerService from '../services/PartnerService';
+import ModalPartner from '../components/ModalPartner.vue';
 import Spinner from '../components/Spinner.vue';
 import { eventBus } from '../main';
 
 export default {
-    name: "Clientes",
+    name: "Partners",
     components: { 
-        ModalClient,
-        Spinner
+        Spinner,
+        ModalPartner
     },
     data() {
-
         eventBus.$on('recordSaved', () => {
             this.getAll()
         });
 
         return {
-            clientes : [],
-            infoCliente: {},
+            partners : [],
+            infoPartner: {},
             componentKey: 0,
             showLoading: false,
         }
@@ -102,8 +99,8 @@ export default {
     methods: {
         getAll() {
             this.showLoading = true;
-            ClienteService.findAll().then((response) => {
-                this.clientes = response.data;
+            PartnerService.findAll().then((response) => {
+                this.partners = response.data;
                 this.componentKey++;
             }).finally(() => {
                 this.showLoading = false;
@@ -112,17 +109,17 @@ export default {
             });
         },
 
-        inactive(idCliente) {
-            if (confirm("Remove register? Will be deactivaded all reports for this client (This action can't be undone)")) {
-                return ClienteService.inactive(idCliente).then(() => {
+        inactive(idAgencia) {
+            if (confirm("Remove register? Will be deactivaded all reports for this partner (This action can't be undone)")) {
+                return PartnerService.inactive(idAgencia).then(() => {
                     alert('Register inactivaded!')
                 });
             }
             return;
         },
 
-        enviaInfoCliente(cliente) {        
-            this.infoCliente = cliente;
+        enviaInfoCliente(agencia) {        
+            this.infoPartner = agencia;
         },
     }
 }
