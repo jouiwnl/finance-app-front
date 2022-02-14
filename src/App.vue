@@ -21,6 +21,6 @@
 body {
   overflow: hidden;
   background: #E6E6FA;
-  background: linear-gradient(to right, #363636, #272727)
+  background: linear-gradient(to right, #292929, #131313)
 }
 </style>

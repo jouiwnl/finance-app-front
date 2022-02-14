@@ -4,25 +4,29 @@
   <label for="menu-toggler"></label>
   <ul>
     <li class="menu-item" title="Dashboard">
-        <a class="fa-solid fa-table-columns"></a>
+        <a class="fa-solid fa-table-columns black-icon"
+           data-bs-toggle="modal" 
+           data-bs-target="#dashboardModal">
+        </a>
     </li>
     <li class="menu-item" title="Reports">
-        <a class="fa-solid fa-file-invoice-dollar"></a>
+        <a class="fa-solid fa-file-invoice-dollar black-icon"></a>
     </li>
     <li class="menu-item" title="Partners">
-        <a class="fa-solid fa-handshake"
+        <a class="fa-solid fa-handshake black-icon"
           data-bs-toggle="modal" 
           data-bs-target="#listPartnerModal"
         ></a>
     </li>
     <li class="menu-item" title="Clients">
         <a
-          class="fa-solid fa-user" 
+          class="fa-solid fa-user black-icon" 
           data-bs-toggle="modal" 
           data-bs-target="#listClientModal"/>
     </li>
     <Clientes />
     <Partners />
+    <Dashboard />
   </ul>
 </nav>
 </template>
@@ -30,13 +34,15 @@
 <script>
 import Clientes from '../views/Clientes.vue';
 import Partners from '../views/Partners.vue';
+import Dashboard from '../views/DashBoard.vue';
 import './styles.css';
 
 export default {
     name: 'Menu',
     components: {
         Clientes,
-        Partners
+        Partners,
+        Dashboard
     }
 }
 
@@ -44,5 +50,7 @@ export default {
 
 
 <style scoped>
-
+  .black-icon {
+    color: #e0e0e0;
+  }
 </style>

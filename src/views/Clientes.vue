@@ -4,26 +4,38 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content" style="background-color: #151414; color: white;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Clients</h5>
-                    <button 
+                    <span 
+                        class="modal-title" 
+                        id="staticBackdropLabel"
+                        title="Clients">
+                        <i class="fa-solid fa-user" style="font-size: 1.8rem"></i>
+                    </span>
+                    <span 
                         data-bs-dismiss="modal"
-                        type="button" 
-                        class="btn btn-secondary"
                         data-bs-toggle="modal"
                         data-bs-target="#clienteModal"
+                        class="options-button"
+                        title="Register client"
                         v-on:click="() => this.infoCliente = {}">
-                        + Client
-                    </button>
-                    <button 
-                        type="button" 
-                        class="btn btn-secondary"
+                        <i class="fa-solid fa-plus"></i>
+                    </span>
+                    <span
+                        class="options-button"
+                        title="Refresh"
                         v-on:click="getAll()">
                         <i class="fa-solid fa-arrows-rotate"></i>
-                    </button>
+                    </span>
+                    <span 
+                        data-bs-dismiss="modal"
+                        class="options-button"
+                        title="Close"
+                        v-on:click="() => this.clientes = []">
+                        <i class="fa-solid fa-xmark"></i>
+                    </span>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 0;">
                     <Spinner v-if="this.showLoading"/>
-                    <table class="table table-bordered table-dark" :key="componentKey" v-if="!this.showLoading">
+                    <table class="table table-borderless table-dark" :key="componentKey" v-if="!this.showLoading">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -61,10 +73,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark btn-sm" data-bs-dismiss="modal">Understood</button>
                 </div>
             </div>
         </div>
