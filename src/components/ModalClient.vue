@@ -1,9 +1,9 @@
 <template>
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="background-color: #151414; color: white;">
       <div class="modal-header">
-        <h5 class="modal-title" id="labelClient">{{ cliente.id ? 'Editing' : 'Registering'}} client</h5>
+        <h5 class="modal-title" id="labelClient">{{ cliente.id ? 'Editing' : 'Registering'}} client <span v-if="cliente.id" class="badge badge-secondary">{{ cliente.id }}</span></h5>
       </div>
       <div class="modal-body">
         <form>

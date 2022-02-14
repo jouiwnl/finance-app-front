@@ -2,7 +2,7 @@
 <div>
     <div class="modal fade" id="listClientModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color: #151414; color: white;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Clients</h5>
                     <button 
@@ -23,12 +23,13 @@
                 </div>
                 <div class="modal-body">
                     <Spinner v-if="this.showLoading"/>
-                    <table class="table table-borderless" :key="componentKey" v-if="!this.showLoading">
+                    <table class="table table-bordered table-dark" :key="componentKey" v-if="!this.showLoading">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Contact</th>
+                                <th scope="col" class="text-center">Situation</th>
                                 <th scope="col" class="text-center">Options</th>
                             </tr>
                         </thead>
@@ -37,15 +38,20 @@
                                 <th scope="row">{{cliente.id}}</th>
                                 <td>{{cliente.nome}}</td>
                                 <td>{{cliente.contato}}</td>
-                                <td class="options" v-if="cliente.situacao != 'DEACTIVADED'">
-                                    <span data-bs-dismiss="modal"
+                                <td class="text-center">
+                                    <span v-if="cliente.situacao == 'DEACTIVADED'" class="badge badge-pill badge-secondary">{{cliente.situacao}}</span>
+                                    <span v-if="cliente.hasReportsActives == true" class="badge badge-pill badge-warning" style="color: black">Have active reports</span>
+                                </td>
+                                <td class="options" v-show="cliente.situacao != 'DEACTIVADED'">
+                                    <span
+                                        data-bs-dismiss="modal"
                                         class="options-button"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#clienteModal"
                                         v-on:click="enviaInfoCliente(cliente)">
                                         <i class="fa-solid fa-pen"></i>
                                     </span>
-                                    <span
+                                    <span 
                                         class="options-button"
                                         v-on:click="inactive(cliente.id)"
                                         title="Inactive client">
