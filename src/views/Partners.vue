@@ -11,12 +11,10 @@
                         <i class="fa-solid fa-handshake" style="font-size: 1.8rem"></i>
                     </span>
                     <span 
-                        data-bs-dismiss="modal"
                         data-bs-toggle="modal"
                         data-bs-target="#partnerModal"
                         class="options-button"
-                        title="Register partner"
-                        v-on:click="() => this.infoPartner = {}">
+                        title="Register partner">
                         <i class="fa-solid fa-plus"></i>
                     </span>
                     <span
@@ -52,16 +50,15 @@
                                     <span v-if="agencia.situacao == 'DEACTIVADED'" class="badge badge-pill badge-secondary">{{agencia.situacao}}</span>
                                     <span v-if="agencia.hasReportsActive == true" class="badge badge-pill badge-warning" style="color: black;">Have active reports</span>
                                 </td>
-                                <td class="options" v-show="agencia.situacao != 'DEACTIVADED'">
-                                    <span
-                                        data-bs-dismiss="modal"
+                                <td class="options">
+                                    <span v-show="agencia.situacao != 'DEACTIVADED'"
                                         class="options-button"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#partnerModal"
-                                        v-on:click="enviaInfoCliente(agencia)">
+                                        v-on:click="enviaInfoAgencia(agencia)">
                                         <i class="fa-solid fa-pen"></i>
                                     </span>
-                                    <span 
+                                    <span v-show="agencia.situacao != 'DEACTIVADED'"
                                         class="options-button"
                                         v-on:click="inactive(agencia.id)"
                                         title="Inactive client">
@@ -75,7 +72,7 @@
             </div>
         </div>
     </div>
-    <ModalPartner :agencia="infoPartner"/>
+    <ModalPartner />
 </div>
     
 </template>
@@ -99,7 +96,6 @@ export default {
 
         return {
             partners : [],
-            infoPartner: {},
             componentKey: 0,
             showLoading: false,
         }
@@ -126,8 +122,8 @@ export default {
             return;
         },
 
-        enviaInfoCliente(agencia) {        
-            this.infoPartner = agencia;
+        enviaInfoAgencia(agencia) {        
+            eventBus.$emit('sendPartner', agencia);
         },
     }
 }

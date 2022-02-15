@@ -1,7 +1,7 @@
 <template>
-<div class="modal fade" id="partnerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="partnerModal" tabindex="-2" style="z-index: 2000" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" style="background-color: #151414; color: white;">
+    <div class="modal-content" style="background-color: #272727; color: white; z-index: 999;">
       <div class="modal-header">
         <h5 class="modal-title" id="labelPartner">{{ agencia.id ? 'Editing' : 'Registering'}} partner <span v-if="agencia.id" class="badge badge-secondary">{{ agencia.id }}</span></h5>
       </div>
@@ -15,20 +15,15 @@
       </div>
       <div class="modal-footer">
         <button 
-            data-bs-dismiss="modal"
             type="button" 
             class="btn btn-secondary"
-            data-bs-target="#listPartnerModal"
-            data-bs-toggle="modal">
+            v-on:click="closeModal()">
             Close
         </button>
         <button 
-            data-bs-dismiss="modal"
             type="button" 
             class="btn btn-dark" 
-            v-on:click="salvar(agencia)"
-            data-bs-target="#listPartnerModal"
-            data-bs-toggle="modal">
+            v-on:click="salvar(agencia); closeModal()">
             Save
         </button>
       </div>
@@ -42,10 +37,13 @@ import PartnerService from '../services/PartnerService';
 import { eventBus } from '../main'
     export default {
         name: 'ModalPartner',
-        props: ["agencia"],
         data() {
+            eventBus.$on('sendPartner', (partner) => {
+              this.agencia = partner;
+            });
+
             return {
-                agencia: this.agencia
+                agencia: {}
             } 
         },
         methods: {
@@ -63,8 +61,13 @@ import { eventBus } from '../main'
                     eventBus.$emit('recordSaved');
                     alert('Registro salvo!')
                 });
+            },
+
+            closeModal() {
+              $('#partnerModal').modal('hide');
+              this.agencia = {};
             }
-        }
+        },
     }
 </script>
 

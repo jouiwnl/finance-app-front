@@ -1,10 +1,11 @@
 <template>
 <div>
-    <div class="modal fade" id="finder" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="width: 100%">
+    <div class="modal fade" id="finder" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content" style="background-color: #151414; color: white;">
                 <div class="button-header" style="display: flex; justify-content: flex-end; padding-right: 30px; padding-top: 10px;">
                     <span 
+                        id="teste"
                         data-bs-dismiss="modal"
                         class="options-button"
                         title="Close"
@@ -73,7 +74,11 @@
                             <tr v-for="parcela in parcelas" :key="parcela.id" style="text-align: center;">
                                 <td>
                                     <small>
-                                        <a style="text-decoration: none;" href="">
+                                        <a data-bs-target="#partnerModal"
+                                            data-bs-toggle="modal"
+                                            style="text-decoration: none;" 
+                                            href=""
+                                            v-on:click="enviaInfoParcela(parcela)">
                                             {{parcela.contrato.banco.nome}}
                                         </a>
                                     </small>
@@ -112,6 +117,7 @@
             </div>
         </div>
     </div>
+    <ModalPartner />
 </div>
     
 </template>
@@ -119,6 +125,7 @@
 <script>
 import PartnerService from '../services/PartnerService';
 import ParcelaService from '../services/ParcelaService';
+import ModalPartner from '../components/ModalPartner.vue';
 import Spinner from '../components/Spinner.vue';
 import moment from 'moment';
 import { eventBus } from '../main';
@@ -126,7 +133,8 @@ import { eventBus } from '../main';
 export default {
     name: "Finder",
     components: { 
-        Spinner
+        Spinner,
+        ModalPartner
     },
     mounted() {
         this.getAllPartners()
@@ -149,7 +157,8 @@ export default {
             componentKey: 0,
             showLoading: false,
             showNotFound: false,
-            vm: this
+            infoPartnerInFinder: {},
+            infoReport: {}
         }
     },
     methods: {
@@ -179,9 +188,11 @@ export default {
                 }
             }).catch(err => {
                 alert('An error occurred to get api. Please, try again later.')
-            });
+            });   
+        },
 
-            
+        enviaInfoParcela(parcela) {
+            eventBus.$emit('sendPartner', parcela.contrato.banco);
         }
     }
 }

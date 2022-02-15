@@ -1,7 +1,7 @@
 <template>
-<div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="clienteModal" tabindex="-1" style="z-index: 2000" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" style="background-color: #151414; color: white;">
+    <div class="modal-content" style="background-color: #272727; color: white;">
       <div class="modal-header">
         <h5 class="modal-title" id="labelClient">{{ cliente.id ? 'Editing' : 'Registering'}} client <span v-if="cliente.id" class="badge badge-secondary">{{ cliente.id }}</span></h5>
       </div>
@@ -23,20 +23,15 @@
       </div>
       <div class="modal-footer">
         <button 
-            data-bs-dismiss="modal"
             type="button" 
             class="btn btn-secondary"
-            data-bs-target="#listClientModal"
-            data-bs-toggle="modal">
+            v-on:click="closeModal()">
             Close
         </button>
         <button 
-            data-bs-dismiss="modal"
             type="button" 
             class="btn btn-dark" 
-            v-on:click="salvar(cliente)"
-            data-bs-target="#listClientModal"
-            data-bs-toggle="modal">
+            v-on:click="salvar(cliente); closeModal()">
             Save
         </button>
       </div>
@@ -50,10 +45,13 @@ import ClienteService from '../services/ClienteService';
 import { eventBus } from '../main'
     export default {
         name: 'ModalClient',
-        props: ["cliente"],
         data() {
+            eventBus.$on('sendClient', (cliente) => {
+              this.cliente = cliente;
+            });
+
             return {
-                cliente: this.cliente
+                cliente: {}
             } 
         },
         methods: {
@@ -71,6 +69,11 @@ import { eventBus } from '../main'
                     eventBus.$emit('recordSaved');
                     alert('Registro salvo!')
                 });
+            },
+
+            closeModal() {
+              $('#clienteModal').modal('hide');
+              this.cliente = {};
             }
         }
     }

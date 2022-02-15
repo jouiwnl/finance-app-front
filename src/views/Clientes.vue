@@ -11,12 +11,10 @@
                         <i class="fa-solid fa-user" style="font-size: 1.8rem"></i>
                     </span>
                     <span 
-                        data-bs-dismiss="modal"
                         data-bs-toggle="modal"
                         data-bs-target="#clienteModal"
                         class="options-button"
-                        title="Register client"
-                        v-on:click="() => this.infoCliente = {}">
+                        title="Register client">
                         <i class="fa-solid fa-plus"></i>
                     </span>
                     <span
@@ -56,7 +54,6 @@
                                 </td>
                                 <td class="options" v-show="cliente.situacao != 'DEACTIVADED'">
                                     <span
-                                        data-bs-dismiss="modal"
                                         class="options-button"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#clienteModal"
@@ -77,7 +74,7 @@
             </div>
         </div>
     </div>
-    <ModalClient :cliente="infoCliente"/>
+    <ModalClient />
 </div>
     
 </template>
@@ -102,7 +99,6 @@ export default {
 
         return {
             clientes : [],
-            infoCliente: {},
             componentKey: 0,
             showLoading: false,
         }
@@ -130,7 +126,7 @@ export default {
         },
 
         enviaInfoCliente(cliente) {        
-            this.infoCliente = cliente;
+            eventBus.$emit('sendClient', cliente);
         },
     }
 }
