@@ -24,9 +24,19 @@
           data-bs-toggle="modal" 
           data-bs-target="#listClientModal"/>
     </li>
+    <li class="menu-item" title="Search reports">
+        <a
+          class="fa-solid fa-magnifying-glass" 
+          data-bs-toggle="modal" 
+          data-bs-target="#finder"/>
+    </li>
+    <li class="menu-item" title="Close menu">
+        <a class="fa-solid fa-xmark" />
+    </li>
     <Clientes />
     <Partners />
     <Dashboard />
+    <Finder />
   </ul>
 </nav>
 </template>
@@ -35,6 +45,7 @@
 import Clientes from '../views/Clientes.vue';
 import Partners from '../views/Partners.vue';
 import Dashboard from '../views/DashBoard.vue';
+import Finder from '../views/Finder.vue';
 import './styles.css';
 
 export default {
@@ -42,7 +53,8 @@ export default {
     components: {
         Clientes,
         Partners,
-        Dashboard
+        Dashboard,
+        Finder
     }
 }
 
