@@ -8,8 +8,6 @@ function montarUrlComFiltros(
 ) {
     var defaultUrl = `parcelas/buscaAvancada?`;
 
-    console.log(paymentStatus)
-
     if (partnerName && partnerName !== 'All') {
         defaultUrl += `partner=${partnerName}&`
     }

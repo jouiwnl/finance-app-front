@@ -1,5 +1,5 @@
 <template>
-<div class="modal fade" id="clienteModal" tabindex="-1" style="z-index: 2000" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-backdrop="static" id="clienteModal" tabindex="-1" style="z-index: 1101" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" style="background-color: #272727; color: white;">
       <div class="modal-header">
@@ -25,7 +25,7 @@
         <button 
             type="button" 
             class="btn btn-secondary"
-            v-on:click="closeModal()">
+            v-on:click="closeModal($event)">
             Close
         </button>
         <button 
@@ -56,24 +56,37 @@ import { eventBus } from '../main'
         },
         methods: {
             salvar(clienteForSave) {
-                this.cliente = {nome: clienteForSave.nome, ssn: clienteForSave.ssn, contato: clienteForSave.contato}
+                var cliente = {nome: clienteForSave.nome, ssn: clienteForSave.ssn, contato: clienteForSave.contato}
+                this.cliente = cliente;
+                if (!this.hasAllAtributtes(cliente)) {
+                    if (clienteForSave.id) {
+                        return ClienteService.update(clienteForSave, clienteForSave.id).then(() => {
+                            eventBus.$emit('recordSaved');
+                            eventBus.$emit('operationSuccess', 'Edited with success!');
+                        });
+                    }
 
-                if (clienteForSave.id) {
-                    return ClienteService.update(this.cliente, clienteForSave.id).then(() => {
+                    return ClienteService.create(clienteForSave).then(() => {
                         eventBus.$emit('recordSaved');
-                        alert('Registro salvo!')
+                        eventBus.$emit('operationSuccess', 'Registered with success!');
                     });
                 }
 
-                return ClienteService.create(this.cliente).then(() => {
-                    eventBus.$emit('recordSaved');
-                    alert('Registro salvo!')
-                });
+                return eventBus.$emit('operationFailed', "Please fill all fields!");
             },
 
-            closeModal() {
-              $('#clienteModal').modal('hide');
-              this.cliente = {};
+            closeModal(event) {
+              if (event) {
+                $('#clienteModal').modal('hide');
+                this.cliente = {};
+              } else if (!this.hasAllAtributtes(this.cliente)) {
+                    $('#clienteModal').modal('hide');
+                    this.cliente = {};
+                }              
+            },
+
+            hasAllAtributtes(obj) {
+              return Object.values(obj).some(v => v === null || v === '' || v === undefined);
             }
         }
     }

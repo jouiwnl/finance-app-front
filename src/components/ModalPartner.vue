@@ -1,5 +1,5 @@
 <template>
-<div class="modal fade" id="partnerModal" tabindex="-2" style="z-index: 2000" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="partnerModal" data-bs-backdrop="static" tabindex="-2" style="z-index: 1101" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" style="background-color: #272727; color: white; z-index: 999;">
       <div class="modal-header">
@@ -10,6 +10,9 @@
           <div class="form-group">
             <label for="name" class="col-form-label">Name</label>
             <input type="text" class="form-control" id="name" v-model="agencia.nome">
+
+            <label for="email" class="col-form-label">E-mail</label>
+            <input type="text" class="form-control" id="email" v-model="agencia.email">
           </div>
         </form>
       </div>
@@ -17,7 +20,7 @@
         <button 
             type="button" 
             class="btn btn-secondary"
-            v-on:click="closeModal()">
+            v-on:click="closeModal($event)">
             Close
         </button>
         <button 
@@ -48,24 +51,38 @@ import { eventBus } from '../main'
         },
         methods: {
             salvar(agenciaForSave) {
-                this.agencia = {nome: agenciaForSave.nome, ssn: agenciaForSave.ssn, contato: agenciaForSave.contato}
+                var agencia = { nome: agenciaForSave.nome, email: agenciaForSave.email } ;
+                this.agencia = agencia;
+                if (!this.hasAllAtributtes(agencia)) {
+                  if (agenciaForSave.id) {
+                      return PartnerService.update(this.agencia, agenciaForSave.id).then(() => {
+                          eventBus.$emit('recordSaved');
+                          eventBus.$emit('operationSuccess', 'Edited with success!');
+                      });
+                  }
 
-                if (agenciaForSave.id) {
-                    return PartnerService.update(this.agencia, agenciaForSave.id).then(() => {
-                        eventBus.$emit('recordSaved');
-                        alert('Registro salvo!')
-                    });
+                  return PartnerService.create(this.agencia).then(() => {
+                      eventBus.$emit('recordSaved');
+                      eventBus.$emit('operationSuccess', 'Registered with success!');
+                  });
                 }
-
-                return PartnerService.create(this.agencia).then(() => {
-                    eventBus.$emit('recordSaved');
-                    alert('Registro salvo!')
-                });
+                
+                return eventBus.$emit('operationFailed', 'Please fill all fields!'); 
             },
 
-            closeModal() {
-              $('#partnerModal').modal('hide');
-              this.agencia = {};
+            closeModal(event) {
+              if (event) {
+                $('#partnerModal').modal('hide');
+                this.agencia = {};
+              } else if (!this.hasAllAtributtes(this.agencia)) {
+                $('#partnerModal').modal('hide');
+                this.agencia = {};
+              }
+            },
+
+            hasAllAtributtes(obj) {
+              console.log(obj)
+              return Object.values(obj).some(v => v === null || v === '' || v === undefined);
             }
         },
     }

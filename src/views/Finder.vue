@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="modal fade" id="finder" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal fade" id="finder" data-bs-backdrop="static" style="z-index: 1100;" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content" style="background-color: #151414; color: white;">
                 <div class="button-header" style="display: flex; justify-content: flex-end; padding-right: 30px; padding-top: 10px;">
@@ -9,7 +9,7 @@
                         data-bs-dismiss="modal"
                         class="options-button"
                         title="Close"
-                        v-on:click="() => this.parcelas = []">
+                        v-on:click="cleanModal()">
                         <i class="fa-solid fa-xmark"></i>
                     </span>
                 </div>
@@ -37,7 +37,7 @@
 
                     <div>
                         <label for="startDate" class="col-form-label">Start Date</label>
-                        <input v-model="finder.startDate" type="date" class="form-control"/>
+                        <input required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" v-model="finder.startDate" type="date" class="form-control"/>
                     </div>
 
                     <div>
@@ -166,7 +166,7 @@ export default {
             PartnerService.findAll().then((response) => {
                 this.partners = response.data;
             }).catch(err => {
-                alert('An error occurred to get api. Please, try again later.')
+                eventBus.$emit('operationFailed','An error occurred to get api. Please, try again later.')
             });
         },
         executeSearch(finder) {
@@ -187,12 +187,22 @@ export default {
                     this.showNotFound = false;
                 }
             }).catch(err => {
-                alert('An error occurred to get api. Please, try again later.')
+                eventBus.$emit('operationFailed','An error occurred to get api. Please, try again later.')
             });   
         },
 
         enviaInfoParcela(parcela) {
             eventBus.$emit('sendPartner', parcela.contrato.banco);
+        },
+
+        cleanModal() {
+            this.parcelas = [];
+            this.finder = { 
+                startDate: moment().format('YYYY-MM-DD'), 
+                endDate: moment().format('YYYY-MM-DD'),
+                situation: "All",
+                partner: "All"
+            };
         }
     }
 }

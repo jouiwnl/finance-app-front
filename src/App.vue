@@ -1,17 +1,23 @@
 <template>
   <div id="app" class="wrapper">
     <Menu />
+    <ToastFailed />
+    <ToastSuccess />
   </div>
   
 </template>
 
 <script>
   import Menu from './components/Menu.vue'
+  import ToastSuccess from './components/ToastOperationSuccess.vue';
+  import ToastFailed from './components/ToastOperationFailed.vue';
 
   export default {
     name: 'App',
     components: {
-      Menu
+      Menu,
+      ToastSuccess,
+      ToastFailed
     }
   }
 </script>

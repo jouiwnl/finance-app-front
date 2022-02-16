@@ -9,7 +9,7 @@
            data-bs-target="#dashboardModal">
         </a>
     </li>
-    <li class="menu-item" title="Reports">
+    <li class="menu-item" title="Register an report">
         <a class="fa-solid fa-file-invoice-dollar black-icon"></a>
     </li>
     <li class="menu-item" title="Partners">

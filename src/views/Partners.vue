@@ -38,6 +38,7 @@
                             <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col">Name</th>
+                                <th scope="col">E-mail</th>
                                 <th scope="col" class="text-center">Situation</th>
                                 <th scope="col" class="text-center">Options</th>
                             </tr>
@@ -46,6 +47,7 @@
                             <tr v-for="agencia in partners" :key="agencia.id" :class="{ 'line-through' : agencia.situacao == 'DEACTIVADED'}">
                                 <th scope="row">{{agencia.id}}</th>
                                 <td>{{agencia.nome}}</td>
+                                <td>{{agencia.email}}</td>
                                 <td class="text-center">
                                     <span v-if="agencia.situacao == 'DEACTIVADED'" class="badge badge-pill badge-secondary">{{agencia.situacao}}</span>
                                     <span v-if="agencia.hasReportsActive == true" class="badge badge-pill badge-warning" style="color: black;">Have active reports</span>
@@ -87,7 +89,7 @@ export default {
     name: "Partners",
     components: { 
         Spinner,
-        ModalPartner
+        ModalPartner,
     },
     data() {
         eventBus.$on('recordSaved', () => {
@@ -109,14 +111,14 @@ export default {
             }).finally(() => {
                 this.showLoading = false;
             }).catch(err => {
-                alert('An error occurred to get api. Please, try again later.')
+                eventBus.$emit('operationFailed','An error occurred to get api. Please, try again later.')
             });
         },
 
         inactive(idAgencia) {
             if (confirm("Remove register? Will be deactivaded all reports for this partner (This action can't be undone)")) {
                 return PartnerService.inactive(idAgencia).then(() => {
-                    alert('Register inactivaded!')
+                    eventBus.$emit('operationSuccess', 'Register inactivaded!')
                 });
             }
             return;
