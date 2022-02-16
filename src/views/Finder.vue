@@ -164,7 +164,7 @@ export default {
     methods: {
         getAllPartners() {
             PartnerService.findAll().then((response) => {
-                this.partners = response.data;
+                this.partners = response.data.filter(partner => partner.situacao != 'DEACTIVADED')
             }).catch(err => {
                 eventBus.$emit('operationFailed','An error occurred to get api. Please, try again later.')
             });
