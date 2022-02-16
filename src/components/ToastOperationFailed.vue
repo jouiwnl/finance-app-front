@@ -10,7 +10,8 @@ import { eventBus } from '../main'
             eventBus.$on('operationFailed', (message) => {
                 tata.error('Failed!', message, {
                     position: 'br',
-                    duration: 3000
+                    duration: 3000,
+                    onClose: eventBus.$emit('recordSaved')
                 })
             });
         }

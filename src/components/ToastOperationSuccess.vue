@@ -10,7 +10,8 @@ import { eventBus } from '../main'
             eventBus.$on('operationSuccess', (message) => {
                 tata.success('Success!', message, {
                     position: 'br',
-                    duration: 3000
+                    duration: 3000,
+                    onclose: eventBus.$emit('recordSaved')
                 })
             });
         }

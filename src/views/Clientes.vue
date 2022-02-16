@@ -33,7 +33,7 @@
                 </div>
                 <div class="modal-body" style="padding: 0;">
                     <Spinner v-if="this.showLoading"/>
-                    <table class="table table-borderless table-dark" :key="componentKey" v-if="!this.showLoading">
+                    <table class="table table-borderless" style="background-color: #343a40; color: white;" :key="componentKey" v-if="!this.showLoading">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -52,16 +52,16 @@
                                     <span v-if="cliente.situacao == 'DEACTIVADED'" class="badge badge-pill badge-danger">{{cliente.situacao}}</span>
                                     <span v-if="cliente.hasReportsActives == true" class="badge badge-pill badge-warning" style="color: black">Have active reports</span>
                                 </td>
-                                <td class="options" v-show="cliente.situacao != 'DEACTIVADED'">
-                                    <span
-                                        class="options-button"
+                                <td class="options" style="height: 100%;" >
+                                    <span :disabled="true" v-show="cliente.situacao != 'DEACTIVADED'"
+                                        class="options-button disabled"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#clienteModal"
                                         v-on:click="enviaInfoCliente(cliente)">
                                         <i class="fa-solid fa-pen"></i>
                                     </span>
                                     <span 
-                                        class="options-button"
+                                        class="options-button" v-show="cliente.situacao != 'DEACTIVADED'"
                                         v-on:click="inactive(cliente.id)"
                                         title="Inactive client">
                                         <i class="fa-solid fa-ban" style="color: red;"></i>
@@ -106,20 +106,22 @@ export default {
     methods: {
         getAll() {
             this.showLoading = true;
-            ClienteService.findAll().then((response) => {
+            ClienteService.findAll()
+            .then((response) => {
                 this.clientes = response.data;
                 this.componentKey++;
             }).finally(() => {
                 this.showLoading = false;
             }).catch(err => {
-                alert('An error occurred to get api. Please, try again later.')
+                eventBus.$emit('operationFailed','An error occurred to get api. Please, try again later.')
             });
         },
 
         inactive(idCliente) {
             if (confirm("Remove register? Will be deactivaded all reports for this client (This action can't be undone)")) {
-                return ClienteService.inactive(idCliente).then(() => {
-                    alert('Register inactivaded!')
+                return ClienteService.inactive(idCliente)
+                .then(() => {
+                    eventBus.$emit('operationSuccess', 'Register inactivaded!')
                 });
             }
             return;

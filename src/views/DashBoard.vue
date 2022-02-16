@@ -76,14 +76,14 @@ export default {
             }).finally(() => {
                 this.showLoading = false;
             }).catch(err => {
-                alert('An error occurred to get api. Please, try again later.')
+                eventBus.$emit('operationFailed','An error occurred to get api. Please, try again later.')
             });
         },
 
         inactive(idAgencia) {
             if (confirm("Remove register? Will be deactivaded all reports for this partner (This action can't be undone)")) {
                 return PartnerService.inactive(idAgencia).then(() => {
-                    alert('Register inactivaded!')
+                    eventBus.$emit('operationSuccess', 'Register inactivaded!')
                 });
             }
             return;

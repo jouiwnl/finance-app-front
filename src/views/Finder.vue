@@ -142,7 +142,7 @@ export default {
     data() {
 
         eventBus.$on('recordSaved', () => {
-            this.getAll()
+            this.getAllPartners()
         });
 
         return {

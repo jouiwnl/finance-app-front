@@ -33,7 +33,7 @@
                 </div>
                 <div class="modal-body" style="padding: 0;">
                     <Spinner v-if="this.showLoading"/>
-                    <table class="table table-borderless table-dark" :key="componentKey" v-if="!this.showLoading">
+                    <table class="table table-borderless" style="background-color: #343a40; color: white;" :key="componentKey" v-if="!this.showLoading">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -44,25 +44,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="agencia in partners" :key="agencia.id" :class="{ 'line-through' : agencia.situacao == 'DEACTIVADED'}">
-                                <th scope="row">{{agencia.id}}</th>
-                                <td>{{agencia.nome}}</td>
-                                <td>{{agencia.email}}</td>
+                            <tr v-for="partner in partners" :key="partner.id" :class="{ 'line-through' : partner.situacao == 'DEACTIVADED'}">
+                                <th scope="row">{{partner.id}}</th>
+                                <td>{{partner.nome}}</td>
+                                <td>{{partner.email}}</td>
                                 <td class="text-center">
-                                    <span v-if="agencia.situacao == 'DEACTIVADED'" class="badge badge-pill badge-secondary">{{agencia.situacao}}</span>
-                                    <span v-if="agencia.hasReportsActive == true" class="badge badge-pill badge-warning" style="color: black;">Have active reports</span>
+                                    <span v-if="partner.situacao == 'DEACTIVADED'" class="badge badge-pill badge-secondary">{{partner.situacao}}</span>
+                                    <span v-if="partner.hasReportsActive == true" class="badge badge-pill badge-warning" style="color: black;">Have active reports</span>
                                 </td>
                                 <td class="options">
-                                    <span v-show="agencia.situacao != 'DEACTIVADED'"
+                                    <span v-show="partner.situacao != 'DEACTIVADED'"
                                         class="options-button"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#partnerModal"
-                                        v-on:click="enviaInfoAgencia(agencia)">
+                                        v-on:click="enviaInfoPartner(partner)">
                                         <i class="fa-solid fa-pen"></i>
                                     </span>
-                                    <span v-show="agencia.situacao != 'DEACTIVADED'"
+                                    <span v-show="partner.situacao != 'DEACTIVADED'"
                                         class="options-button"
-                                        v-on:click="inactive(agencia.id)"
+                                        v-on:click="inactive(partner.id)"
                                         title="Inactive client">
                                         <i class="fa-solid fa-ban" style="color: red;"></i>
                                     </span>
@@ -92,20 +92,22 @@ export default {
         ModalPartner,
     },
     data() {
-        eventBus.$on('recordSaved', () => {
-            this.getAll()
-        });
-
         return {
             partners : [],
             componentKey: 0,
             showLoading: false,
         }
     },
+    async created() {
+        eventBus.$on('recordSaved', () => {
+            this.getAll()
+        });
+    },
     methods: {
         getAll() {
             this.showLoading = true;
-            PartnerService.findAll().then((response) => {
+            PartnerService.findAll()
+            .then((response) => {
                 this.partners = response.data;
                 this.componentKey++;
             }).finally(() => {
@@ -115,17 +117,18 @@ export default {
             });
         },
 
-        inactive(idAgencia) {
+        inactive(idPartner) {
             if (confirm("Remove register? Will be deactivaded all reports for this partner (This action can't be undone)")) {
-                return PartnerService.inactive(idAgencia).then(() => {
+                return PartnerService.inactive(idPartner)
+                .then(() => {
                     eventBus.$emit('operationSuccess', 'Register inactivaded!')
                 });
             }
             return;
         },
 
-        enviaInfoAgencia(agencia) {        
-            eventBus.$emit('sendPartner', agencia);
+        enviaInfoPartner(partner) {        
+            eventBus.$emit('sendPartner', partner);
         },
     }
 }
