@@ -51,17 +51,18 @@ import { eventBus } from '../main'
         },
         methods: {
             salvar(agenciaForSave) {
+                console.log(agenciaForSave)
                 var agencia = { nome: agenciaForSave.nome, email: agenciaForSave.email } ;
                 this.agencia = agencia;
                 if (!this.hasAllAtributtes(agencia)) {
                   if (agenciaForSave.id) {
-                      return PartnerService.update(this.agencia, agenciaForSave.id).then(() => {
+                      return PartnerService.update(agencia, agenciaForSave.id).then(() => {
                           eventBus.$emit('recordSaved');
                           eventBus.$emit('operationSuccess', 'Edited with success!');
                       });
                   }
 
-                  return PartnerService.create(this.agencia).then(() => {
+                  return PartnerService.create(agencia).then(() => {
                       eventBus.$emit('recordSaved');
                       eventBus.$emit('operationSuccess', 'Registered with success!');
                   });
